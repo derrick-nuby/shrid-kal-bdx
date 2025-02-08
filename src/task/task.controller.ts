@@ -17,7 +17,7 @@ export class TaskController {
 
     return {
       message: 'Task has been created successfully',
-      task,
+      data: task,
     };
   }
 
@@ -27,7 +27,7 @@ export class TaskController {
     const tasks = await this.taskService.findAll();
     return {
       message: 'Tasks retrieved successfully',
-      tasks,
+      data: tasks,
     };
   }
 
@@ -37,7 +37,7 @@ export class TaskController {
     const task = await this.taskService.findOne(id);
     return {
       message: 'Task retrieved successfully',
-      task,
+      data: task,
     };
   }
 
@@ -47,7 +47,7 @@ export class TaskController {
     const task = await this.taskService.update(id, data);
     return {
       message: 'Task updated successfully',
-      task,
+      data: task,
     };
   }
 
@@ -57,7 +57,7 @@ export class TaskController {
     const task = await this.taskService.delete(id);
     return {
       message: 'Task deleted successfully',
-      task,
+      data: task,
     };
   }
 
@@ -67,7 +67,7 @@ export class TaskController {
     const task = await this.taskService.complete(id);
     return {
       message: 'Task status changed successfully',
-      task,
+      data: task,
     };
   }
 }
