@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Task } from './schemas/task.schema';
@@ -41,13 +41,17 @@ export class TaskService {
     }
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     try {
 
       if (!isValidObjectId(id)) {
         throw new BadRequestException('Invalid task ID');
       }
-      const task = this.taskModel.findById(id).exec();
+      const task = await this.taskModel.findById(id).exec();
+
+      if (!task) {
+        throw new NotFoundException('Task not found');
+      }
 
       return task;
     } catch (error) {
@@ -55,14 +59,14 @@ export class TaskService {
     }
   }
 
-  update(id: string, data: UpdateTaskDto) {
+  async update(id: string, data: UpdateTaskDto) {
     try {
 
       if (!isValidObjectId(id)) {
         throw new BadRequestException('Invalid task ID');
       }
 
-      const task = this.taskModel.findByIdAndUpdate(id, data, { new: true }).exec();
+      const task = await this.taskModel.findByIdAndUpdate(id, data, { new: true }).exec();
 
       if (!task) {
         throw new BadRequestException('Task not found');
@@ -75,14 +79,14 @@ export class TaskService {
     }
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     try {
 
       if (!isValidObjectId(id)) {
         throw new BadRequestException('Invalid task ID');
       }
 
-      const deletedTask = this.taskModel.findByIdAndDelete(id).exec();
+      const deletedTask = await this.taskModel.findByIdAndDelete(id).exec();
 
       if (!deletedTask) {
         throw new BadRequestException('Task not found');
