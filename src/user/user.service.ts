@@ -22,8 +22,9 @@ export class UserService {
       }
 
       const user = await this.userModel.create(createUserDto);
+      const { password, ...result } = user.toObject();
 
-      return user;
+      return result;
     } catch (error) {
       throw new BadRequestException(`${error.message}`);
     }
@@ -63,7 +64,7 @@ export class UserService {
         throw new BadRequestException('Invalid user ID');
       }
 
-      const user = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).exec();
+      const user = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).select('-password').exec();
 
       if (!user) {
         throw new NotFoundException('User not found');
@@ -83,7 +84,7 @@ export class UserService {
         throw new BadRequestException('Invalid user ID');
       }
 
-      const user = await this.userModel.findByIdAndDelete(id).exec();
+      const user = await this.userModel.findByIdAndDelete(id).select('-password').exec();
 
       if (!user) {
         throw new NotFoundException('User not found');

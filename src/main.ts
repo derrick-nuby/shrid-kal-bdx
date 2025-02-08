@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger, VersioningType } from '@nestjs/common';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -8,15 +8,6 @@ async function bootstrap() {
   const port = process.env.PORT ?? 3000;
   const appName = process.env.APP_NAME ?? 'App';
   const apiPrefix = 'api';
-
-  app.setGlobalPrefix(apiPrefix, {
-    exclude: ['/', 'api/v1']
-  });
-
-  app.enableVersioning({
-    type: VersioningType.URI,
-    defaultVersion: '1',
-  });
 
   const localServer = process.env.LOCAL_SERVER ?? 'http://localhost:3210';
   const productionServer = process.env.PRODUCTION_SERVER ?? 'https://nn.onrender.com';
@@ -42,7 +33,21 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, documentFactory);
 
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true
+  }));
+
+  app.setGlobalPrefix(apiPrefix, {
+    exclude: ['/', 'api/v1']
+  });
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  });
+
   await app.listen(port);
+
   Logger.log(`${appName} has started successfully and is running on port ${port} and you can run it on http://localhost:${port}`, 'Bootstrap');
 }
 bootstrap();
