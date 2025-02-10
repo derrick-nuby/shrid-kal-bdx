@@ -1,10 +1,11 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException, Req, UnauthorizedException } from "@nestjs/common";
 import { RegisterUserDto } from './dto/register.dto';
 import { LoginUserDto } from './dto/login.dto';
 import { InjectModel } from "@nestjs/mongoose";
 import { User } from "src/user/schemas/user.schema";
 import { Model } from "mongoose";
 import * as bcrypt from "bcrypt";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {
@@ -12,6 +13,7 @@ export class AuthService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<User>,
+    private readonly jwtService: JwtService,
   ) { }
 
 
@@ -42,21 +44,35 @@ export class AuthService {
 
       const passwordMatch = await bcrypt.compare(LoginUserDto.password, user.password);
       if (!passwordMatch) {
-        throw new BadRequestException('Invalid credentials');
+        throw new UnauthorizedException('Invalid credentials');
       }
 
+      const payload = { email: user.email, sub: user._id };
+
+      const token = this.jwtService.sign(payload);
+
       const { password, ...result } = user.toObject();
-      return result;
+      return {
+        ...result,
+        access_token: token,
+      };
 
     } catch (error) {
       throw new BadRequestException(`${error.message}`);
     }
   }
 
-  getProfile() {
+  async getProfile(@Req() req) {
     try {
+      const { id } = req.user;
 
+      const user = await this.userModel.findById(id).select('-password').exec();
 
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      return user;
     } catch (error) {
       throw new BadRequestException(`${error.message}`);
     }
@@ -70,3 +86,4 @@ export class AuthService {
     }
   }
 }
+

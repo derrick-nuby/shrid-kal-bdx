@@ -34,7 +34,9 @@ async function bootstrap() {
   SwaggerModule.setup('api-docs', app, documentFactory);
 
   app.useGlobalPipes(new ValidationPipe({
-    transform: true
+    transform: true,
+    whitelist: true,
+    forbidNonWhitelisted: true,
   }));
 
   app.setGlobalPrefix(apiPrefix, {

@@ -1,11 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register.dto';
 import { LoginUserDto } from './dto/login.dto';
+import { JwtAuthGuard } from './guards/jwt.auth.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(
+    private readonly authService: AuthService
+
+  ) { }
 
   @Post('register')
   async userRegistration(@Body() RegisterUserDto: RegisterUserDto) {
@@ -27,9 +31,15 @@ export class AuthController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile() {
-    return this.authService.getProfile();
+  async getProfile(@Req() req) {
+    const user = await this.authService.getProfile(req);
+
+    return {
+      message: 'User profile',
+      data: user,
+    };
   }
 
   @Get('verify-email')

@@ -29,7 +29,7 @@ export class RegisterUserDto {
     type: String,
     required: true,
     minLength: 8,
-    example: 'P@ssw0rd!',
+    example: 'Wx9AP^P^Hxji134Q',
   })
   @IsNotEmpty()
   @IsString()
