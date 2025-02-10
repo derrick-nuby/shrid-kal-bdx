@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { CreateTaskDto } from './dto/create-task.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Task } from './schemas/task.schema';
-import { Model, isValidObjectId } from 'mongoose';
+import { Model } from 'mongoose';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
