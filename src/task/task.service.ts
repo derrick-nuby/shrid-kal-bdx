@@ -13,16 +13,20 @@ export class TaskService {
     private readonly taskModel: Model<Task>,
   ) { }
 
-  async create(data: CreateTaskDto) {
+  async create(data: CreateTaskDto, userId: string) {
     try {
-
       const existingTask = await this.taskModel.findOne({ title: data.title });
 
       if (existingTask) {
         throw new BadRequestException('Task already exists');
       }
 
-      const task = this.taskModel.create(data);
+      const task = new this.taskModel({
+        ...data,
+        createdBy: userId,
+      });
+
+      await task.save();
 
       return task;
 
@@ -31,9 +35,9 @@ export class TaskService {
     }
   }
 
-  async findAll() {
+  async findAll(userId: string) {
     try {
-      const tasks = await this.taskModel.find().exec();
+      const tasks = await this.taskModel.find({ createdBy: userId }).exec();
 
       return tasks;
     } catch (error) {
@@ -41,10 +45,10 @@ export class TaskService {
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, userId: string) {
     try {
 
-      const task = await this.taskModel.findById(id).exec();
+      const task = await this.taskModel.findOne({ _id: id, createdBy: userId }).exec();
 
       if (!task) {
         throw new NotFoundException('Task not found');
@@ -56,11 +60,15 @@ export class TaskService {
     }
   }
 
-  async update(id: string, data: UpdateTaskDto) {
+  async update(id: string, data: UpdateTaskDto, userId: string) {
     try {
 
 
-      const task = await this.taskModel.findByIdAndUpdate(id, data, { new: true }).exec();
+      const task = await this.taskModel.findOneAndUpdate(
+        { _id: id, createdBy: userId },
+        data,
+        { new: true }
+      ).exec();
 
       if (!task) {
         throw new BadRequestException('Task not found');
@@ -73,11 +81,11 @@ export class TaskService {
     }
   }
 
-  async delete(id: string) {
+  async delete(id: string, userId: string) {
     try {
 
 
-      const deletedTask = await this.taskModel.findByIdAndDelete(id).exec();
+      const deletedTask = await this.taskModel.findOneAndDelete({ _id: id, createdBy: userId }).exec();
 
       if (!deletedTask) {
         throw new BadRequestException('Task not found');
@@ -90,11 +98,11 @@ export class TaskService {
     }
   }
 
-  async complete(id: string) {
+  async complete(id: string, userId: string) {
     try {
 
 
-      const task = await this.taskModel.findById(id).exec();
+      const task = await this.taskModel.findOne({ _id: id, createdBy: userId }).exec();
 
       if (!task) {
         throw new BadRequestException('Task not found');
