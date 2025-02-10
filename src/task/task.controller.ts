@@ -3,6 +3,7 @@ import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ParseObjectIdPipe } from 'src/pipes/parse-object-id.pipe';
 
 
 @ApiTags('Tasks')
@@ -33,7 +34,7 @@ export class TaskController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a task by id' })
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ParseObjectIdPipe) id: string) {
     const task = await this.taskService.findOne(id);
     return {
       message: 'Task retrieved successfully',
@@ -43,7 +44,7 @@ export class TaskController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a task by id' })
-  async update(@Param('id') id: string, @Body() data: UpdateTaskDto) {
+  async update(@Param('id', ParseObjectIdPipe) id: string, @Body() data: UpdateTaskDto) {
     const task = await this.taskService.update(id, data);
     return {
       message: 'Task updated successfully',
@@ -53,7 +54,7 @@ export class TaskController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a task by id' })
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id', ParseObjectIdPipe) id: string) {
     const task = await this.taskService.delete(id);
     return {
       message: 'Task deleted successfully',
@@ -63,7 +64,7 @@ export class TaskController {
 
   @Patch(':id/complete')
   @ApiOperation({ summary: 'Mark a task as completed or uncompleted' })
-  async complete(@Param('id') id: string) {
+  async complete(@Param('id', ParseObjectIdPipe) id: string) {
     const task = await this.taskService.complete(id);
     return {
       message: 'Task status changed successfully',

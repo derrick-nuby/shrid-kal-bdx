@@ -44,9 +44,6 @@ export class TaskService {
   async findOne(id: string) {
     try {
 
-      if (!isValidObjectId(id)) {
-        throw new BadRequestException('Invalid task ID');
-      }
       const task = await this.taskModel.findById(id).exec();
 
       if (!task) {
@@ -62,9 +59,6 @@ export class TaskService {
   async update(id: string, data: UpdateTaskDto) {
     try {
 
-      if (!isValidObjectId(id)) {
-        throw new BadRequestException('Invalid task ID');
-      }
 
       const task = await this.taskModel.findByIdAndUpdate(id, data, { new: true }).exec();
 
@@ -82,9 +76,6 @@ export class TaskService {
   async delete(id: string) {
     try {
 
-      if (!isValidObjectId(id)) {
-        throw new BadRequestException('Invalid task ID');
-      }
 
       const deletedTask = await this.taskModel.findByIdAndDelete(id).exec();
 
@@ -102,9 +93,6 @@ export class TaskService {
   async complete(id: string) {
     try {
 
-      if (!isValidObjectId(id)) {
-        throw new BadRequestException('Invalid task ID');
-      }
 
       const task = await this.taskModel.findById(id).exec();
 

@@ -42,9 +42,6 @@ export class UserService {
 
   async findOne(id: string) {
     try {
-      if (!isValidObjectId(id)) {
-        throw new BadRequestException('Invalid user ID');
-      }
 
       const user = await this.userModel.findById(id).select('-password').exec();
 
@@ -60,9 +57,6 @@ export class UserService {
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     try {
-      if (!isValidObjectId(id)) {
-        throw new BadRequestException('Invalid user ID');
-      }
 
       const user = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).select('-password').exec();
 
@@ -80,9 +74,6 @@ export class UserService {
 
   async remove(id: string) {
     try {
-      if (!isValidObjectId(id)) {
-        throw new BadRequestException('Invalid user ID');
-      }
 
       const user = await this.userModel.findByIdAndDelete(id).select('-password').exec();
 

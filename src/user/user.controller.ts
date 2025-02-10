@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ParseObjectIdPipe } from 'src/pipes/parse-object-id.pipe';
 
 @ApiTags('Users')
 @Controller('users')
@@ -31,7 +32,7 @@ export class UserController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a user by id' })
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ParseObjectIdPipe) id: string) {
     const user = await this.userService.findOne(id);
     return {
       message: 'User retrieved successfully',
@@ -41,7 +42,7 @@ export class UserController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update a user by id' })
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id', ParseObjectIdPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
     const user = await this.userService.update(id, updateUserDto);
     return {
       message: 'User updated successfully',
@@ -51,7 +52,7 @@ export class UserController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a user by id' })
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id', ParseObjectIdPipe) id: string) {
     const user = await this.userService.remove(id);
     return {
       message: 'User deleted successfully',
