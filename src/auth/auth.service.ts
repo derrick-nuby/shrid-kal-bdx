@@ -6,6 +6,7 @@ import { User } from "src/user/schemas/user.schema";
 import { Model } from "mongoose";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
+import { MailService } from "src/mail/mail.service";
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
     @InjectModel(User.name)
     private readonly userModel: Model<User>,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService
   ) { }
 
 
@@ -24,9 +26,16 @@ export class AuthService {
       if (existingUser) {
         throw new BadRequestException('User already exists');
       }
+      const encryptedToken = await bcrypt.hash(RegisterUserDto.email, 10);
 
       const user = await this.userModel.create(RegisterUserDto);
       const { password, ...result } = user.toObject();
+
+      await this.mailService.sendVerificationEmail(
+        user.email,
+        user.name,
+        encryptedToken
+      );
 
       return result;
     } catch (error) {
