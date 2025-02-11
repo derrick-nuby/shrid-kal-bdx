@@ -7,6 +7,8 @@ import { Model } from "mongoose";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
 import { MailService } from "src/mail/mail.service";
+import { createEncryptedToken, decryptToken } from "src/utils/verify-token.util";
+import { v4 as uuidV4 } from "uuid";
 
 @Injectable()
 export class AuthService {
@@ -26,10 +28,11 @@ export class AuthService {
       if (existingUser) {
         throw new BadRequestException('User already exists');
       }
-      const encryptedToken = await bcrypt.hash(RegisterUserDto.email, 10);
 
       const user = await this.userModel.create(RegisterUserDto);
       const { password, ...result } = user.toObject();
+
+      const encryptedToken = createEncryptedToken(user._id, user.email);
 
       await this.mailService.sendVerificationEmail(
         user.email,
@@ -87,8 +90,24 @@ export class AuthService {
     }
   }
 
-  verifyEmail(token: string) {
+  async verifyEmail(token: string) {
     try {
+      const { userId, email } = decryptToken(token);
+
+      const user = await this.userModel.findOne({ _id: userId, email }).select('-password');
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      if (user.isVerified) {
+        throw new NotFoundException('User is already verified');
+      }
+
+      user.isVerified = true;
+      await user.save();
+
+      return user;
 
     } catch (error) {
       throw new BadRequestException(`${error.message}`);

@@ -45,8 +45,13 @@ export class AuthController {
   }
 
   @Get('verify-email')
-  verifyEmail(@Query('token') token: string) {
-    return this.authService.verifyEmail(token);
+  async verifyEmail(@Query('token') token: string) {
+    const verifiedUser = await this.authService.verifyEmail(token);
+
+    return {
+      message: 'User email verified',
+      data: verifiedUser,
+    };
   }
 
 }

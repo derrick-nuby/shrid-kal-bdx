@@ -5,7 +5,6 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -31,6 +30,7 @@ import { join } from 'path';
             strict: true,
           },
         },
+        preview: true, // Enable email preview
       }),
       inject: [ConfigService],
     }),
