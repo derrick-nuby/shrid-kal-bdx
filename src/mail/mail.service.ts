@@ -31,18 +31,19 @@ export class MailService {
 
   }
 
-  async sendPasswordCreatingEmail(email: string, names: string, token: string) {
+  async sendResetPasswordEmail(email: string, name: string, token: string) {
     try {
       const frontendUrl = this.configService.get<string>('FRONTEND_URL');
-      const passwordCreationLink = `${frontendUrl}/create-password?token=${token}`;
+      const resetPasswordLink = `${frontendUrl}/reset-password?token=${token}`;
 
       await this.mailerService.sendMail({
         to: email,
-        subject: 'Create password',
-        template: './create-password',
+        subject: 'Reset Your Password',
+        template: './reset-password',
         context: {
-          name: names,
-          passwordCreationLink: passwordCreationLink
+          email,
+          name,
+          resetPasswordLink
         }
       });
 
@@ -51,20 +52,15 @@ export class MailService {
     }
   }
 
-  async sendTeamInvitationEmail(email: string, token: string, expiresIn: number) {
+  async sendPasswordFinishReset(email: string, name: string) {
     try {
-      const baseUrl = this.configService.get<string>('APP_URL');
-      const acceptLink = `${baseUrl}/team-invitations?token=${token}`;
-      const rejectLink = `${baseUrl}/team-invitations?token=${token}`;
 
       await this.mailerService.sendMail({
         to: email,
-        subject: 'Accept Team Invitation',
-        template: './team-invitation',
+        subject: 'Reset Your Password',
+        template: './password-reset-finish',
         context: {
-          acceptLink,
-          rejectLink,
-          expiresIn
+          name,
         }
       });
 
@@ -73,16 +69,15 @@ export class MailService {
     }
   }
 
-  async sendRejectionEmail(email: string, challengeTitle: string, reason: string) {
+  async sendUpdatePasswordEmail(email: string, name: string) {
     try {
-
       await this.mailerService.sendMail({
         to: email,
-        subject: 'Team Application Canceled',
-        template: './team-application-canceled',
+        subject: 'Password Updated',
+        template: './update-password',
         context: {
-          reason,
-          challengeTitle
+          name: name,
+          email: email,
         }
       });
 
@@ -91,16 +86,18 @@ export class MailService {
     }
   }
 
-
-  async sendApprovalEmail(email: string, challengeTitle: string) {
+  async sendUpdateEmailConfirmation(email: string, name: string, token: string) {
     try {
+      const frontendUrl = this.configService.get<string>('FRONTEND_URL');
+      const updateEmailLink = `${frontendUrl}/update-email?token=${token}`;
 
       await this.mailerService.sendMail({
         to: email,
-        subject: 'Team Application Approved',
-        template: './team-application-approved',
+        subject: 'Confirm Your New Email Address',
+        template: './update-email',
         context: {
-          challengeTitle
+          name,
+          updateEmailLink
         }
       });
 

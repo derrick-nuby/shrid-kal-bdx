@@ -54,4 +54,59 @@ export class AuthController {
     };
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Patch('update-password')
+  async updatePassword(@Req() req, @Body('newPassword') newPassword: string) {
+    const userId = req.user.id;
+    const result = await this.authService.updatePassword(userId, newPassword);
+
+    return {
+      message: 'Password updated successfully',
+      data: result,
+    };
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body('email') email: string) {
+    const result = await this.authService.forgotPassword(email);
+
+    return {
+      message: 'Password reset email sent',
+      data: result,
+    };
+  }
+
+  @Patch('reset-password')
+  async resetPassword(@Query('token') token: string, @Body('newPassword') newPassword: string) {
+    const result = await this.authService.resetPassword(token, newPassword);
+
+    return {
+      message: 'Password reset successfully',
+      data: result,
+    };
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Patch('update-email')
+  async updateEmail(@Req() req, @Body('newEmail') newEmail: string) {
+    const userId = req.user.id;
+    const result = await this.authService.updateEmail(userId, newEmail);
+
+    return {
+      message: 'Email update confirmation sent',
+      data: result,
+    };
+  }
+
+  @Get('confirm-update-email')
+  async confirmUpdateEmail(@Query('token') token: string) {
+    const result = await this.authService.confirmUpdateEmail(token);
+
+    return {
+      message: 'Email updated successfully',
+      data: result,
+    };
+  }
 }
