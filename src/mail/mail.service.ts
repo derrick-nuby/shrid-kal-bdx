@@ -106,4 +106,25 @@ export class MailService {
     }
   }
 
+  async sendUserCreatedSetPassword(email: string, name: string, token: string) {
+    try {
+      const frontendUrl = this.configService.get<string>('FRONTEND_URL');
+      const updatePasswordLink = `${frontendUrl}/reset-password?token=${token}`;
+
+      await this.mailerService.sendMail({
+        to: email,
+        subject: 'Confirm Your New Email Address',
+        template: './update-user-created-set-password',
+        context: {
+          name,
+          email,
+          updatePasswordLink
+        }
+      });
+
+    } catch (error) {
+      console.log('Error sending email', error);
+    }
+  }
+
 }
