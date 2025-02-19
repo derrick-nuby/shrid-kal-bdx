@@ -4,6 +4,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
+import { MailService } from "src/mail/mail.service";
+import { createEncryptedToken } from "src/utils/verify-token.util";
+import { createDefaultPassword } from 'src/utils/createDefaultPassword';
 
 @Injectable()
 export class UserService {
@@ -11,6 +14,7 @@ export class UserService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<User>,
+    private readonly mailService: MailService
   ) { }
 
   async create(createUserDto: CreateUserDto) {
@@ -21,10 +25,22 @@ export class UserService {
         throw new BadRequestException('User already exists');
       }
 
-      const user = await this.userModel.create(createUserDto);
-      const { password, ...result } = user.toObject();
+      const defaultPassword = createDefaultPassword(createUserDto.name);
 
-      return result;
+      console.log('defaultPassword', defaultPassword);
+
+      const userToCreate = {
+        ...createUserDto,
+        password: defaultPassword
+      };
+
+      const user = await this.userModel.create(userToCreate);
+
+      const token = createEncryptedToken(user._id, user.email);
+
+      await this.mailService.sendUserCreatedSetPassword(user.email, user.name, token);
+
+      return user;
     } catch (error) {
       throw new BadRequestException(`${error.message}`);
     }
