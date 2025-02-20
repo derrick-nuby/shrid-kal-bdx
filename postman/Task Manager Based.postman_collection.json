@@ -1,0 +1,416 @@
+{
+	"info": {
+		"_postman_id": "eef273b0-b990-4f63-b41f-d4d99eb5073e",
+		"name": "Task Manager Based",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "24842410"
+	},
+	"item": [
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Get All Tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{dev-url}}/tasks"
+					},
+					"response": []
+				},
+				{
+					"name": "Create New Task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"title\": \"Write Cpp logs\",\r\n\t\"description\": \"Make cpp logs for testing capabilities\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{dev-url}}/tasks"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Task",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{dev-url}}/tasks/67aa6fb305c48e4c42a7d30d"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Single Task",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"title\": \"Write Cpp logs pdated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{dev-url}}/tasks/67aa6fb305c48e4c42a7d30d"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single Task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{dev-url}}/tasks/67a71d74fad9735a56c1755e"
+					},
+					"response": []
+				},
+				{
+					"name": "Un | Complete Task",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": "{{dev-url}}/tasks/67a6362b7bad8a1bf340f112/complete"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{dev-url}}/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"name\": \"Email User\",\r\n\t\"email\": \"emailuserd@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{dev-url}}/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{dev-url}}/users/123"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"name\": \"test\",\r\n\t\"email\": \"test@gmail.com\",\r\n\t\"password\": \"P@ssw0rd!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{dev-url}}/users/67aa580b3652481ed24c4ad5"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{dev-url}}/users/67aa4f774d5d021ba4b2f5a4"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"name\": \"derrick\",\r\n\t\"email\": \"derrickiradu@gmail.com\",\r\n\t\"password\": \"P@ssw0rd!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{dev-url}}/auth/register"
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"email\": \"derrickiradu@gmail.com\",\r\n\t\"password\": \"P@ssw0rd!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{dev-url}}/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"email\": \"derrick@gmail.com\",\r\n\t\"password\": \"P@ssw0rd!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{dev-url}}/auth/profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Vertify Email",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dev-url}}/auth/verify-email?token=U2FsdGVkX19iAJ2Tc9oJV4_AOMkeFEAob1AOOLm9L89KKoC2SmsflbUYtufO7kprkxUISD45QOGhvHWCh0UoqAqVNgSYMwB3x07ftVYKuYXRv2zH7M4AY1BGAu731Vxb_wKb0sRJDrhFv_H2BiumPA",
+							"host": [
+								"{{dev-url}}"
+							],
+							"path": [
+								"auth",
+								"verify-email"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "U2FsdGVkX19iAJ2Tc9oJV4_AOMkeFEAob1AOOLm9L89KKoC2SmsflbUYtufO7kprkxUISD45QOGhvHWCh0UoqAqVNgSYMwB3x07ftVYKuYXRv2zH7M4AY1BGAu731Vxb_wKb0sRJDrhFv_H2BiumPA"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Password",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"newPassword\": \"P@ssw0rd!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{dev-url}}/auth/update-password"
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"email\": \"derrickiradu@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{dev-url}}/auth/forgot-password"
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"newPassword\": \"P@ssw0rd!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dev-url}}/auth/reset-password?token=U2FsdGVkX1-F916pcJ-W9jM2POFlRBeMQDlDQhLXK1RNf8PbzPVRRAENWdd3DNABTdp7IsAUmucKRRudjLugZQTQ2GUqF5prZXUFWm-h10HCu1oX9iSVcMl-NpYO690fcA_AXWqWrfDdhU9YZX7gBA",
+							"host": [
+								"{{dev-url}}"
+							],
+							"path": [
+								"auth",
+								"reset-password"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "U2FsdGVkX1-F916pcJ-W9jM2POFlRBeMQDlDQhLXK1RNf8PbzPVRRAENWdd3DNABTdp7IsAUmucKRRudjLugZQTQ2GUqF5prZXUFWm-h10HCu1oX9iSVcMl-NpYO690fcA_AXWqWrfDdhU9YZX7gBA"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Email Address",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"newEmail\": \"emailuserd@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{dev-url}}/auth/update-email"
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Update Email",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dev-url}}/auth/confirm-update-email?token=U2FsdGVkX1-IG78KIbZr16YIgDL9ArSzj-1wCe9Tkbx-ufUyot_KJ2mmb14zFWLzDTlAUVW21m48bH3BYTWSdWfA2o1AL8G29-o363Tu_co1SiboeL1SRG14BO16JnxTNolV0xVEAVWXPTrsq7cXxA",
+							"host": [
+								"{{dev-url}}"
+							],
+							"path": [
+								"auth",
+								"confirm-update-email"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "U2FsdGVkX1-IG78KIbZr16YIgDL9ArSzj-1wCe9Tkbx-ufUyot_KJ2mmb14zFWLzDTlAUVW21m48bH3BYTWSdWfA2o1AL8G29-o363Tu_co1SiboeL1SRG14BO16JnxTNolV0xVEAVWXPTrsq7cXxA"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRlcnJpY2tpcmFkdUBnbWFpbC5jb20iLCJzdWIiOiI2N2I1OTY1YWRiMTMyMTlhZGZmNjdmMjciLCJpYXQiOjE3Mzk5NTQyMzQsImV4cCI6MTc3MTUxMTgzNH0.VCwLcyDG-8ixbTB4QuOEmsVgSlbTR9uk1-kW34fl1Uc"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "dev-url",
+			"value": "http://localhost:3210/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRlcnJpY2tAZ21haWwuY29tIiwic3ViIjoiNjdhNzU3ZWQ1MjllMTBmZTA0NjczODNiIiwiaWF0IjoxNzM5MjE5MTQzLCJleHAiOjE4OTcwMDcxNDN9.O7aZ8i1KOaF7o-3R_cGxshBQOOfPLEmZExGD4J4wCLw",
+			"type": "string"
+		}
+	]
+}
