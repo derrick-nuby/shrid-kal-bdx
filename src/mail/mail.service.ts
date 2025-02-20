@@ -127,4 +127,25 @@ export class MailService {
     }
   }
 
+  async sendActivateUserAccount(email: string, name: string, token: string) {
+    try {
+      const frontendUrl = this.configService.get<string>('FRONTEND_URL');
+      const activateAcountLink = `${frontendUrl}/activate-account?token=${token}`;
+
+      await this.mailerService.sendMail({
+        to: email,
+        subject: 'Activate Your Account',
+        template: './activate-user-account',
+        context: {
+          name,
+          email,
+          activateAcountLink
+        }
+      });
+
+    } catch (error) {
+      console.log('Error sending email', error);
+    }
+  }
+
 }

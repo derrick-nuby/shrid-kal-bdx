@@ -17,6 +17,15 @@ export class User extends Document {
 
   @Prop({ default: false })
   isVerified: boolean;
+
+  @Prop({ default: true })
+  isActive: boolean;
+
+  @Prop({ type: Object, default: { ip: '', date: null } })
+  lastLogin: {
+    ip: string;
+    date: Date;
+  };
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

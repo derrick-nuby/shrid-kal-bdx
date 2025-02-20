@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Req, Ip } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register.dto';
 import { LoginUserDto } from './dto/login.dto';
@@ -23,8 +23,8 @@ export class AuthController {
   }
 
   @Post('login')
-  async userLogin(@Body() LoginUserDto: LoginUserDto) {
-    const user = await this.authService.login(LoginUserDto);
+  async userLogin(@Body() LoginUserDto: LoginUserDto, @Req() req, @Ip() ip: string) {
+    const user = await this.authService.login(LoginUserDto, req, ip);
 
     return {
       message: 'User logged in successful',

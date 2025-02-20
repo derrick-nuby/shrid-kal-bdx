@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -20,6 +21,7 @@ import { MailModule } from './mail/mail.module';
       }),
       inject: [ConfigService]
     }),
+    ScheduleModule.forRoot(),
     TaskModule,
     UserModule,
     AuthModule,
