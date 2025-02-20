@@ -2,7 +2,7 @@ import { Document, Schema as MongooseSchema } from "mongoose";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { User } from "src/user/schemas/user.schema";
 
-@Schema()
+@Schema({ timestamps: true })
 export class Task extends Document {
   @Prop({ required: true })
   title: string;
