@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from "helmet";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -32,6 +33,16 @@ async function bootstrap() {
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, documentFactory);
+
+    app.use(helmet());  // Apply security middleware to set HTTP headers
+
+    app.enableCors({
+        origin: (process.env.CORS_ORIGINS ?? 'http://localhost:3000').split(',').map(origin => origin.trim()),
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true,
+        maxAge: 86400,
+    });
 
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
