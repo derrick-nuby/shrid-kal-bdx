@@ -14,6 +14,7 @@ import { MailModule } from './mail/mail.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(), // This is a module to be used by Cron Jobs
     MongooseModule.forRootAsync({
       imports: [],
       useFactory: async (configService: ConfigService) => ({
