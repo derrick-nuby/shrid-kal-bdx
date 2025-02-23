@@ -2,9 +2,18 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from "helmet";
+import {NestExpressApplication} from "@nestjs/platform-express";
+import {ThrottlerExceptionFilter} from "./filters/throttler-exception.filter";
+import {ConfigService} from "@nestjs/config";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+    app.set('trust proxy', 'loopback'); //Enabling trust proxy allows you to retrieve the original IP address from the X-Forwarded-For header
+    const configService = app.get(ConfigService);
+
+
   const port = process.env.PORT ?? 3000;
   const appName = process.env.APP_NAME ?? 'App';
   const apiPrefix = 'api';
@@ -33,11 +42,23 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, documentFactory);
 
+    app.use(helmet());  // Apply security middleware to set HTTP headers
+
+    app.enableCors({
+        origin: (process.env.CORS_ORIGINS ?? 'http://localhost:3000').split(',').map(origin => origin.trim()),
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true,
+        maxAge: 86400,
+    });
+
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
     whitelist: true,
     forbidNonWhitelisted: true,
   }));
+
+  app.useGlobalFilters(new ThrottlerExceptionFilter(configService));
 
   app.setGlobalPrefix(apiPrefix, {
     exclude: ['/', 'api/v1']

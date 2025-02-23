@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Req, Ip } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { RegisterUserDto } from './dto/register.dto';
-import { LoginUserDto } from './dto/login.dto';
-import { JwtAuthGuard } from './guards/jwt.auth.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import {Body, Controller, Get, Ip, Patch, Post, Query, Req, UseGuards} from '@nestjs/common';
+import {AuthService} from './auth.service';
+import {RegisterUserDto} from './dto/register.dto';
+import {LoginUserDto} from './dto/login.dto';
+import {JwtAuthGuard} from './guards/jwt.auth.guard';
+import {ApiBearerAuth} from '@nestjs/swagger';
+import {ThrottlerGuard} from "@nestjs/throttler";
 
 @Controller('auth')
 export class AuthController {
@@ -23,6 +24,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @UseGuards(ThrottlerGuard)
   async userLogin(@Body() LoginUserDto: LoginUserDto, @Req() req, @Ip() ip: string) {
     const user = await this.authService.login(LoginUserDto, req, ip);
 
