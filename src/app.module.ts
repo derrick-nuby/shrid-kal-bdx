@@ -1,18 +1,29 @@
-import { Module } from '@nestjs/common';
-import { ScheduleModule } from '@nestjs/schedule';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TaskModule } from './task/task.module';
-import { MongooseModule } from '@nestjs/mongoose';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-import { MailModule } from './mail/mail.module';
+import {Module} from '@nestjs/common';
+import {ScheduleModule} from '@nestjs/schedule';
+import {AppController} from './app.controller';
+import {AppService} from './app.service';
+import {ConfigModule, ConfigService} from '@nestjs/config';
+import {TaskModule} from './task/task.module';
+import {MongooseModule} from '@nestjs/mongoose';
+import {UserModule} from './user/user.module';
+import {AuthModule} from './auth/auth.module';
+import {MailModule} from './mail/mail.module';
+import {ThrottlerModule} from "@nestjs/throttler";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ([
+        {
+          ttl: config.get('THROTTLE_TTL', 300000),
+          limit: config.get('THROTTLE_LIMIT', 5),
+        },
+      ]),
     }),
     ScheduleModule.forRoot(), // This is a module to be used by Cron Jobs
     MongooseModule.forRootAsync({

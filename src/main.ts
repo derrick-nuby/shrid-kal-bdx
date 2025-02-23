@@ -3,9 +3,17 @@ import { AppModule } from './app.module';
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from "helmet";
+import {NestExpressApplication} from "@nestjs/platform-express";
+import {ThrottlerExceptionFilter} from "./filters/throttler-exception.filter";
+import {ConfigService} from "@nestjs/config";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+    app.set('trust proxy', 'loopback'); //Enabling trust proxy allows you to retrieve the original IP address from the X-Forwarded-For header
+    const configService = app.get(ConfigService);
+
+
   const port = process.env.PORT ?? 3000;
   const appName = process.env.APP_NAME ?? 'App';
   const apiPrefix = 'api';
@@ -49,6 +57,8 @@ async function bootstrap() {
     whitelist: true,
     forbidNonWhitelisted: true,
   }));
+
+  app.useGlobalFilters(new ThrottlerExceptionFilter(configService));
 
   app.setGlobalPrefix(apiPrefix, {
     exclude: ['/', 'api/v1']
