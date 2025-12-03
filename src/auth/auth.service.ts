@@ -1,29 +1,38 @@
-import { BadRequestException, Injectable, NotFoundException, Req, UnauthorizedException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { RegisterUserDto } from './dto/register.dto';
 import { LoginUserDto } from './dto/login.dto';
-import { InjectModel } from "@nestjs/mongoose";
-import { User } from "src/user/schemas/user.schema";
-import { Model } from "mongoose";
-import * as bcrypt from "bcrypt";
-import { JwtService } from "@nestjs/jwt";
-import { MailService } from "src/mail/mail.service";
-import { createEncryptedToken, decryptToken } from "src/utils/verify-token.util";
-import { v4 as uuidV4 } from "uuid";
+import { InjectModel } from '@nestjs/mongoose';
+import { User } from 'src/user/schemas/user.schema';
+import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { MailService } from 'src/mail/mail.service';
+import {
+  createEncryptedToken,
+  decryptToken,
+} from 'src/utils/verify-token.util';
+import { v4 as uuidV4 } from 'uuid';
 
 @Injectable()
 export class AuthService {
-
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<User>,
     private readonly jwtService: JwtService,
-    private readonly mailService: MailService
-  ) { }
-
+    private readonly mailService: MailService,
+  ) {}
 
   async register(RegisterUserDto: RegisterUserDto) {
     try {
-      const existingUser = await this.userModel.findOne({ email: RegisterUserDto.email });
+      const existingUser = await this.userModel.findOne({
+        email: RegisterUserDto.email,
+      });
 
       if (existingUser) {
         throw new BadRequestException('User already exists');
@@ -37,7 +46,7 @@ export class AuthService {
       await this.mailService.sendVerificationEmail(
         user.email,
         user.name,
-        encryptedToken
+        encryptedToken,
       );
 
       return result;
@@ -48,20 +57,25 @@ export class AuthService {
 
   async login(LoginUserDto: LoginUserDto, req: any, ip: string) {
     try {
-      const user = await this.userModel.findOne({ email: LoginUserDto.email }).exec();
+      const user = await this.userModel
+        .findOne({ email: LoginUserDto.email })
+        .exec();
 
       if (!user) {
         throw new NotFoundException('User not found');
       }
 
-      const passwordMatch = await bcrypt.compare(LoginUserDto.password, user.password);
+      const passwordMatch = await bcrypt.compare(
+        LoginUserDto.password,
+        user.password,
+      );
       if (!passwordMatch) {
         throw new UnauthorizedException('Invalid credentials');
       }
 
       user.lastLogin = {
         ip: ip,
-        date: new Date()
+        date: new Date(),
       };
       await user.save();
 
@@ -73,7 +87,6 @@ export class AuthService {
         ...result,
         access_token: token,
       };
-
     } catch (error) {
       throw new BadRequestException(`${error.message}`);
     }
@@ -99,7 +112,9 @@ export class AuthService {
     try {
       const { userId, email } = decryptToken(token);
 
-      const user = await this.userModel.findOne({ _id: userId, email }).select('-password');
+      const user = await this.userModel
+        .findOne({ _id: userId, email })
+        .select('-password');
 
       if (!user) {
         throw new NotFoundException('User not found');
@@ -113,7 +128,6 @@ export class AuthService {
       await user.save();
 
       return user;
-
     } catch (error) {
       throw new BadRequestException(`${error.message}`);
     }
@@ -121,7 +135,10 @@ export class AuthService {
 
   async updatePassword(userId: string, newPassword: string) {
     try {
-      const user = await this.userModel.findById(userId).select('-password').exec();
+      const user = await this.userModel
+        .findById(userId)
+        .select('-password')
+        .exec();
 
       if (!user) {
         throw new NotFoundException('User not found');
@@ -130,10 +147,7 @@ export class AuthService {
       user.password = newPassword;
       await user.save();
 
-      await this.mailService.sendUpdatePasswordEmail(
-        user.email,
-        user.name,
-      );
+      await this.mailService.sendUpdatePasswordEmail(user.email, user.name);
 
       return user;
     } catch (error) {
@@ -143,7 +157,10 @@ export class AuthService {
 
   async forgotPassword(email: string) {
     try {
-      const user = await this.userModel.findOne({ email }).select('-password').exec();
+      const user = await this.userModel
+        .findOne({ email })
+        .select('-password')
+        .exec();
 
       if (!user) {
         throw new NotFoundException('User not found');
@@ -153,7 +170,7 @@ export class AuthService {
       await this.mailService.sendResetPasswordEmail(
         user.email,
         user.name,
-        token
+        token,
       );
 
       return { message: 'Password reset email sent' };
@@ -175,10 +192,7 @@ export class AuthService {
       user.password = newPassword;
       await user.save();
 
-      await this.mailService.sendPasswordFinishReset(
-        user.email,
-        user.name,
-      );
+      await this.mailService.sendPasswordFinishReset(user.email, user.name);
 
       return { message: 'Password reset successfully' };
     } catch (error) {
@@ -195,7 +209,11 @@ export class AuthService {
       }
 
       const token = createEncryptedToken(user._id, newEmail);
-      await this.mailService.sendUpdateEmailConfirmation(newEmail, user.name, token);
+      await this.mailService.sendUpdateEmailConfirmation(
+        newEmail,
+        user.name,
+        token,
+      );
 
       return { message: 'Email update confirmation sent' };
     } catch (error) {
@@ -222,4 +240,3 @@ export class AuthService {
     }
   }
 }
-

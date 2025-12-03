@@ -5,8 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../user/schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtAuthGuard } from "./guards/jwt.auth.guard";
-import { JwtStrategy } from "./strategies/jwt.strategy";
+import { JwtAuthGuard } from './guards/jwt.auth.guard';
+import { JwtStrategy } from './strategies/jwt.strategy';
 import { MailModule } from 'src/mail/mail.module';
 
 @Module({
@@ -19,14 +19,14 @@ import { MailModule } from 'src/mail/mail.module';
         return {
           secret: config.get<string>('JWT_SECRET'),
           signOptions: {
-            expiresIn: config.get<string | number>('JWT_EXPIRE')
+            expiresIn: config.get('JWT_EXPIRE'),
           },
         };
-      }
+      },
     }),
     MailModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtAuthGuard, JwtStrategy],
 })
-export class AuthModule { }
+export class AuthModule {}

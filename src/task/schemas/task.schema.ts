@@ -1,6 +1,6 @@
-import { Document, Schema as MongooseSchema } from "mongoose";
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { User } from "src/user/schemas/user.schema";
+import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { User } from 'src/user/schemas/user.schema';
 
 @Schema({ timestamps: true })
 export class Task extends Document {

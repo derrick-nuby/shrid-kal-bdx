@@ -12,4 +12,4 @@ import { ParseObjectIdPipe } from 'src/pipes/parse-object-id.pipe';
   controllers: [TaskController],
   providers: [TaskService, ParseObjectIdPipe],
 })
-export class TaskModule { }
+export class TaskModule {}

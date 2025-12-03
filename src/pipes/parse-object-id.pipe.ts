@@ -2,7 +2,7 @@ import {
   PipeTransform,
   Injectable,
   ArgumentMetadata,
-  BadRequestException
+  BadRequestException,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
 
@@ -10,7 +10,9 @@ import { Types } from 'mongoose';
 export class ParseObjectIdPipe implements PipeTransform<string, string> {
   transform(value: string, metadata: ArgumentMetadata): string {
     if (!Types.ObjectId.isValid(value)) {
-      throw new BadRequestException('Invalid Resource Id Please Go Back And Try Again');
+      throw new BadRequestException(
+        'Invalid Resource Id Please Go Back And Try Again',
+      );
     }
     return value;
   }

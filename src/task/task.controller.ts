@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -6,11 +16,10 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { ParseObjectIdPipe } from 'src/pipes/parse-object-id.pipe';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 
-
 @ApiTags('Tasks')
 @Controller('tasks')
 export class TaskController {
-  constructor(private readonly taskService: TaskService) { }
+  constructor(private readonly taskService: TaskService) {}
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
@@ -56,7 +65,11 @@ export class TaskController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiOperation({ summary: 'Update a task by id' })
-  async update(@Param('id', ParseObjectIdPipe) id: string, @Body() data: UpdateTaskDto, @Req() req) {
+  async update(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Body() data: UpdateTaskDto,
+    @Req() req,
+  ) {
     const { id: userId } = req.user;
     const task = await this.taskService.update(id, data, userId);
     return {

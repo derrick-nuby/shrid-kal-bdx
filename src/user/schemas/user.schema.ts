@@ -1,7 +1,7 @@
 // file location: src/user/schemas/user.schema.ts
 
-import { Document } from "mongoose";
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 
 @Schema({ timestamps: true })
@@ -38,7 +38,6 @@ UserSchema.pre<User>('save', async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
-
 
 UserSchema.pre('updateOne', async function (next) {
   const update = this.getUpdate() as any;

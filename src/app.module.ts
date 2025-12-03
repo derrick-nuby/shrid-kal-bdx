@@ -19,7 +19,7 @@ import { MailModule } from './mail/mail.module';
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGO_URI'),
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
     ScheduleModule.forRoot(),
     TaskModule,
@@ -30,4 +30,4 @@ import { MailModule } from './mail/mail.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { } 
+export class AppModule {}

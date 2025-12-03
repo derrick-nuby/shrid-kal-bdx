@@ -1,6 +1,5 @@
-import * as crypto from "crypto-js";
-import * as process from "process";
-
+import * as crypto from 'crypto-js';
+import * as process from 'process';
 
 export function encrypt(text: string): string {
   const SECRET_KEY = process.env.CRYPTO_SECRET_KEY;
@@ -17,11 +16,7 @@ export function encrypt(text: string): string {
 
   const base64 = encrypted.toString();
 
-  return base64
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
-
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
 export function decrypt(encryptedText: string): string {
@@ -34,14 +29,10 @@ export function decrypt(encryptedText: string): string {
   }
 
   try {
-    const base64 = encryptedText
-      .replace(/-/g, '+')
-      .replace(/_/g, '/');
+    const base64 = encryptedText.replace(/-/g, '+').replace(/_/g, '/');
 
     const pad = base64.length % 4;
-    const paddedBase64 = pad
-      ? base64 + '='.repeat(4 - pad)
-      : base64;
+    const paddedBase64 = pad ? base64 + '='.repeat(4 - pad) : base64;
 
     const bytes = crypto.AES.decrypt(paddedBase64, SECRET_KEY);
     const decrypted = bytes.toString(crypto.enc.Utf8);

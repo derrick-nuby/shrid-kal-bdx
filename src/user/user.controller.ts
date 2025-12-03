@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -9,7 +19,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
@@ -51,7 +61,10 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Put(':id')
   @ApiOperation({ summary: 'Update a user by id' })
-  async update(@Param('id', ParseObjectIdPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     const user = await this.userService.update(id, updateUserDto);
     return {
       message: 'User updated successfully',

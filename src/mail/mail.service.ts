@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { MailerService } from "@nestjs-modules/mailer";
-import { ConfigService } from "@nestjs/config";
+import { MailerService } from '@nestjs-modules/mailer';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MailService {
   constructor(
     private readonly mailerService: MailerService,
-    private readonly configService: ConfigService
-  ) { }
+    private readonly configService: ConfigService,
+  ) {}
 
   async sendVerificationEmail(email: string, name: string, token: string) {
     try {
-
       const frontendUrl = this.configService.get<string>('FRONTEND_URL');
       const verificationLink = `${frontendUrl}/verify-email?token=${token}`;
 
@@ -21,14 +20,12 @@ export class MailService {
         template: './verify-email',
         context: {
           name: name,
-          verificationLink: verificationLink
-        }
+          verificationLink: verificationLink,
+        },
       });
-
     } catch (error) {
       console.log('Error sending email', error);
     }
-
   }
 
   async sendResetPasswordEmail(email: string, name: string, token: string) {
@@ -43,10 +40,9 @@ export class MailService {
         context: {
           email,
           name,
-          resetPasswordLink
-        }
+          resetPasswordLink,
+        },
       });
-
     } catch (error) {
       console.log('Error sending email', error);
     }
@@ -54,16 +50,14 @@ export class MailService {
 
   async sendPasswordFinishReset(email: string, name: string) {
     try {
-
       await this.mailerService.sendMail({
         to: email,
         subject: 'Reset Your Password',
         template: './password-reset-finish',
         context: {
           name,
-        }
+        },
       });
-
     } catch (error) {
       console.log('Error sending email', error);
     }
@@ -78,15 +72,18 @@ export class MailService {
         context: {
           name: name,
           email: email,
-        }
+        },
       });
-
     } catch (error) {
       console.log('Error sending email', error);
     }
   }
 
-  async sendUpdateEmailConfirmation(email: string, name: string, token: string) {
+  async sendUpdateEmailConfirmation(
+    email: string,
+    name: string,
+    token: string,
+  ) {
     try {
       const frontendUrl = this.configService.get<string>('FRONTEND_URL');
       const updateEmailLink = `${frontendUrl}/update-email?token=${token}`;
@@ -97,10 +94,9 @@ export class MailService {
         template: './update-email',
         context: {
           name,
-          updateEmailLink
-        }
+          updateEmailLink,
+        },
       });
-
     } catch (error) {
       console.log('Error sending email', error);
     }
@@ -118,10 +114,9 @@ export class MailService {
         context: {
           name,
           email,
-          updatePasswordLink
-        }
+          updatePasswordLink,
+        },
       });
-
     } catch (error) {
       console.log('Error sending email', error);
     }
@@ -139,13 +134,11 @@ export class MailService {
         context: {
           name,
           email,
-          activateAcountLink
-        }
+          activateAcountLink,
+        },
       });
-
     } catch (error) {
       console.log('Error sending email', error);
     }
   }
-
 }

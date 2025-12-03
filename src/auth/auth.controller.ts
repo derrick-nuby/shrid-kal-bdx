@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Req, Ip } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+  Req,
+  Ip,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register.dto';
 import { LoginUserDto } from './dto/login.dto';
@@ -7,10 +19,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService
-
-  ) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   async userRegistration(@Body() RegisterUserDto: RegisterUserDto) {
@@ -23,7 +32,11 @@ export class AuthController {
   }
 
   @Post('login')
-  async userLogin(@Body() LoginUserDto: LoginUserDto, @Req() req, @Ip() ip: string) {
+  async userLogin(
+    @Body() LoginUserDto: LoginUserDto,
+    @Req() req,
+    @Ip() ip: string,
+  ) {
     const user = await this.authService.login(LoginUserDto, req, ip);
 
     return {
@@ -78,7 +91,10 @@ export class AuthController {
   }
 
   @Patch('reset-password')
-  async resetPassword(@Query('token') token: string, @Body('newPassword') newPassword: string) {
+  async resetPassword(
+    @Query('token') token: string,
+    @Body('newPassword') newPassword: string,
+  ) {
     const result = await this.authService.resetPassword(token, newPassword);
 
     return {
